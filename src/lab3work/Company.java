@@ -18,22 +18,11 @@ public class Company {
     }
 
     public boolean addEmployee(Employee employee) {
-        if (!ifEmployeeExists(employee)) {
+        if (employee != null && !ifEmployeeExists(employee)) {
             this.employees.add(employee);
             return true;
         }
         return false;
-    }
-
-    public boolean addEmployee(int operationSelect) {
-        Employee employee = null;
-        if (operationSelect == 2) {
-            employee = new Developer();
-        }
-        if (operationSelect == 3) {
-            employee = new Manager();
-        }
-        return addEmployee(employee);
     }
 
     private boolean ifEmployeeExists(Employee employee) {
@@ -63,7 +52,7 @@ public class Company {
         String company = "Company \"" + companyName + "\":\n";
         int n = 0;
         for (Employee employee : employees)
-            company += (Integer.toString(++n) + ". " + employee + "\n");
+            company += (++n + ". " + employee + "\n");
 
         return company;
     }

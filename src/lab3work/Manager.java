@@ -3,12 +3,9 @@ package lab3work;
 import lab3work.Employee;
 
 public class Manager extends Employee {
-    public Manager() {
-        super();
-    }
 
-    public Manager(String employee) {
-        super(employee);
+    public Manager(String lastname, String firstname, int age, String sexEmployee, double salary) {
+        super(lastname, firstname, age, sexEmployee, salary);
     }
 
     @Override
