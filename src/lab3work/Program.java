@@ -13,7 +13,7 @@ public class Program {
             while (operationSelect != 9) {
                 in.nextLine();
                 switch (operationSelect) {
-                    case 1 -> addCompanyEmployees();
+                    case 1 -> addCompanyEmployees(company);
                     case 2 -> {
                         System.out.println("Enter a developer in format {surname name age sex salary {skill1, skill2}}");
                         company.addEmployee(addCompanyEmployee(Position.DEVELOPER));
@@ -60,7 +60,7 @@ public class Program {
         return new Company(companyName);
     }
 
-    public static void addCompanyEmployees() {
+    public static void addCompanyEmployees(Company company) {
         System.out.println("""
                 Enter list of company's employees:
                 (press "Enter" to enter the next employee)
@@ -70,9 +70,9 @@ public class Program {
 
         Employee employee = addCompanyEmployee(employeePosition);
         while (employee != null) {
-//            if (!company.addEmployee(employee)) {
-//                System.out.println("The employee was not added");
-//            }
+            if (!company.addEmployee(employee)) {
+                System.out.println("The employee was not added");
+            }
             employee = addCompanyEmployee(employeePosition);
         }
     }
@@ -86,7 +86,6 @@ public class Program {
         Position position = null;
         int operationNumber = in.nextInt();
         while (position == null) {
-            in.nextInt();
             switch (operationNumber) {
                 case 1 -> {
                     position = Position.MANAGER;
@@ -94,11 +93,12 @@ public class Program {
                 }
                 case 2 -> {
                     position = Position.DEVELOPER;
-                    System.out.println("Enter a developer in format {surname name age sex salary /skill1, skill2}");
+                    System.out.println("Enter a developer in format {surname name age sex salary {skill1, skill2}}");
                 }
                 default -> System.out.println("The entered position doesn't exist, please select correct position");
             }
         }
+        in.nextLine();
         return position;
     }
 
