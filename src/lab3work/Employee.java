@@ -15,6 +15,11 @@ public abstract class Employee {
         this.salary = salary;
     }
 
+    public void setSalary(double salary) {
+        this.salary = salary;
+    }
+
+
     public String toString() {
                 return String.join(" ", this.firstname,
                 this.lastname,

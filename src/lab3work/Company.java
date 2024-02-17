@@ -43,16 +43,43 @@ public class Company {
         return false;
     }
 
+    public boolean changeEmployeeSalary(int index, double salary) {
+        if (checkIndexOfEmployee(index)) {
+            Employee employee = employees.get(index);
+            employee.setSalary(salary);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean addEmployeeSkills(int index, String skill) {
+        if (checkIndexOfEmployee(index)) {
+            Developer employee = (Developer) employees.get(index);
+            employee.addDeveloperSkill(skill);
+            return true;
+        }
+        return false;
+    }
+
     public boolean checkIndexOfEmployee(int index) {
+
         return index >= 0 && index < employees.size();
     }
 
     public String toString() {
 
-        String company = "Company \"" + companyName + "\":\n";
-        int n = 0;
+        String company = "\nCompany \"" + companyName + "\":\n";
+        int nManagers = 0;
+        int nDevelopers = 0;
+        String managers = "Managers:\n";
+        String developers = "Developers:\n";
         for (Employee employee : employees)
-            company += (++n + ". " + employee + "\n");
+            if (employee instanceof Manager){
+                managers += (++nManagers + ". " + employee + " (" + (employees.indexOf(employee) + 1) + ")\n");
+            } else if (employee instanceof Developer) {
+                developers += (++nDevelopers + ". " + employee + " (" + (employees.indexOf(employee) + 1) + ")\n");
+            }
+            company = company + managers + developers;
 
         return company;
     }

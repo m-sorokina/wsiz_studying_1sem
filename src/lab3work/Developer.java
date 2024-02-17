@@ -12,6 +12,15 @@ public class Developer extends Employee {
 
     }
 
+    public void addDeveloperSkill(String skill){
+        String skills = String.join(",", this.skills) + "," + skill;
+        this.skills = skills.trim().split("\\s+,\\s+|,\\s+|\\s+,|,");
+    }
+    @Override
+    public void setSalary(double salary) {
+        super.setSalary(salary);
+    }
+
     @Override
     public String toString() {
         String skillsToPrint = " {" + String.join(", ", this.skills)  + "}";
