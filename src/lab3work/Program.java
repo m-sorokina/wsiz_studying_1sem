@@ -4,6 +4,8 @@ import java.util.Scanner;
 
 public class Program {
     public static Scanner in = new Scanner(System.in);
+    public static final String formatDeveloper = "\"surname name age sex salary {skill1, skill2}\"";
+    public static final String formatManager = "\"surname name age sex salary\"";
 
     public static void main(String[] args) {
 
@@ -14,20 +16,21 @@ public class Program {
             while (operationSelect != 9) {
                 in.nextLine();
                 switch (operationSelect) {
-                    case 1 -> System.out.println(company);
+                    case 1 -> company.printCompanyEmployees();
                     case 2 -> addCompanyEmployees(company);
                     case 3 -> {
-                        System.out.println("Enter a developer in format {surname name age sex salary {skill1, skill2}}");
+                        System.out.println("\nEnter a developer in format " + formatDeveloper + ":");
                         company.addEmployee(addCompanyEmployee(Position.DEVELOPER));
                     }
                     case 4 -> {
-                        System.out.println("Enter a manager in format {surname name age sex salary}");
+                        System.out.println("\nEnter a manager in format " + formatManager + ":");
                         company.addEmployee(addCompanyEmployee(Position.MANAGER));
                     }
                     case 5 -> removeCompanyEmployee(company);
                     case 6 -> changeEmployeeSalary(company);
                     case 7 -> addDeveloperSkills(company);
-                    default -> System.out.println("Operation with such number doesn't exist");
+                    case 8 -> groupEmployeeByTeam(company);
+                    default -> System.out.println("\nOperation with such number doesn't exist");
                 }
 //                System.out.println(company);
                 operationSelect = callMenu();
@@ -47,9 +50,10 @@ public class Program {
                 2 - enter new company employees with a list
                 3 - add developer
                 4 - add manager
-                5 - remove employee by employee's index (the number in () at the end of a row)
-                6 - change salary by employee's index (the number in () at the end of a row)
-                7 - add new skill to developer by employee's index (the number in () at the end of a row)
+                5 - remove employee by employee's index
+                6 - change salary by employee's index
+                7 - add new skill to developer by employee's index
+                8 - group employees to team
                 9 - end the program
                                 
                 Enter the operation number:\s""");
@@ -57,12 +61,11 @@ public class Program {
         return in.nextInt();
     }
 
-
     public static void addCompanyEmployeeByDefault(Company company) {
         Employee[] employees = new Employee[3];
-        employees[0] = new Developer("Mortimer", "Adam", 28, "m", 4600, new String[]{"SQL, JavaScript, C#"});
-        employees[1] = new Developer("Daniels", "Jack", 35, "m", 5800, new String[]{"HTML, C++"});
-        employees[2] = new Manager("Weider", "Dart", 40, "m", 9500);
+        employees[0] = new Developer("Mortimer", "Adam", 28, "m", 4600, new String[]{"SQL", "JavaScript", "C#"}, Position.DEVELOPER);
+        employees[1] = new Developer("Daniels", "Jack", 35, "m", 5800, new String[]{"HTML", "C++"}, Position.DEVELOPER);
+        employees[2] = new Manager("Weider", "Dart", 40, "m", 9500, Position.MANAGER);
         for (Employee employee : employees) {
             company.addEmployee(employee);
         }
@@ -114,11 +117,11 @@ public class Program {
             switch (operationNumber) {
                 case 1 -> {
                     position = Position.MANAGER;
-                    System.out.println("Enter a manager in format {surname name age sex salary}");
+                    System.out.println("Enter a manager in format " + formatManager + ";");
                 }
                 case 2 -> {
                     position = Position.DEVELOPER;
-                    System.out.println("Enter a developer in format {surname name age sex salary {skill1, skill2}}");
+                    System.out.println("Enter a developer in format " + formatDeveloper + ":");
                 }
                 default -> System.out.println("The entered position doesn't exist, please select correct position");
             }
@@ -139,9 +142,10 @@ public class Program {
                 double salary = Double.parseDouble(employeeToSplit[4].trim());
                 if (position == Position.DEVELOPER) {
                     String[] skills = str.substring(str.indexOf("{") + 1, str.length() - 1).trim().split("\\s+,\\s+|,\\s+|\\s+,|,");
-                    return new Developer(lastname, firstname, age, sexEmployee, salary, skills);
+                    return new Developer(lastname, firstname, age, sexEmployee, salary, skills, position);
                 } else if (position == Position.MANAGER) {
-                    return new Manager(lastname, firstname, age, sexEmployee, salary);
+//                    int teamSize = Integer.parseInt(employeeToSplit[5].trim());
+                    return new Manager(lastname, firstname, age, sexEmployee, salary, position);
                 }
             } catch (Exception ignore) {
                 System.out.println("Some needed fields are missing or incorrect\nThe employee was not added");
@@ -151,15 +155,19 @@ public class Program {
     }
 
     public static void removeCompanyEmployee(Company company) {
-        System.out.print("To remove company's employee enter employee's index: ");
-        if (!company.removeEmployee(Integer.parseInt(in.nextLine()) - 1)) {
-            System.out.println("The employee with such index was not found");
+        System.out.print("\nTo remove company's employee enter employee's index: ");
+        try {
+            if (!company.removeEmployee(Integer.parseInt(in.nextLine()) - 1)) {
+                System.out.println("The employee with such index was not found");
+            }
+        } catch (Exception ignore) {
+            System.out.println("Some entered data are incorrect\nThe employee is not removed");
         }
 
     }
 
     public static void changeEmployeeSalary(Company company) {
-        System.out.print("To change the salary enter employee's index and new salary in format \"index, salary\": ");
+        System.out.print("\nTo change the salary enter employee's index and new salary in format \"index, salary\": ");
         try {
             String[] temp = in.nextLine().trim().split(",\\s+");
             int index = Integer.parseInt(temp[0].trim()) - 1;
@@ -173,7 +181,7 @@ public class Program {
     }
 
     public static void addDeveloperSkills(Company company) {
-        System.out.print("To add new skill to developer enter employee's index and new skill in format \"index, skill\": ");
+        System.out.print("\nTo add new skill to developer enter employee's index and new skill in format \"index, skill\": ");
         try {
             String[] temp = in.nextLine().trim().split(",\\s+");
             int index = Integer.parseInt(temp[0].trim()) - 1;
@@ -186,5 +194,22 @@ public class Program {
         }
     }
 
+    public static void groupEmployeeByTeam(Company company) {
+        System.out.print("\nEnter team name and team members employee indexes in format \"team name, index1, index2\": ");
+        try {
+            String[] temp = Program.in.nextLine().trim().split(",\\s+");
+            String teamName = temp[0].trim();
+            int[] teamMembersIndexes = new int[temp.length - 1];
+            for (int i = 0; i < temp.length - 1; i++) {
+                teamMembersIndexes[i] = Integer.parseInt(temp[i + 1].trim()) - 1;
+            }
+            company.addCompanyEmployeeToTeam(teamName, teamMembersIndexes);
+        } catch (Exception ignore) {
+            System.out.println("Some entered data are incorrect\nThe employees were not grouped by team");
+        }
+    }
 }
+
+
+
 

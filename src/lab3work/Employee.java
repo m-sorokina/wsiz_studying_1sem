@@ -6,35 +6,54 @@ public abstract class Employee {
     private final int age;
     private final Sex sexEmployee;
     private double salary;
+    private Position position;
+    private Team team;
 
-     public Employee(String lastname, String firstname, int age, String sexEmployee, double salary) {
+
+     public Employee(String lastname, String firstname, int age,
+                     String sexEmployee, double salary, Position position) {
         this.lastname = lastname;
         this.firstname = firstname;
         this.age = age;
         this.sexEmployee = (sexEmployee.toUpperCase().startsWith("M")) ? Sex.MALE : Sex.FEMALE;
         this.salary = salary;
+        this.position = position;
+        team = null;
     }
 
+    public Position getPosition(){
+         return position;
+    }
     public void setSalary(double salary) {
         this.salary = salary;
     }
-
 
     public String toString() {
                 return String.join(" ", this.firstname,
                 this.lastname,
                 Integer.toString(this.age),
-                (sexEmployee == Sex.MALE) ? "M" : "F",
-                "$" + this.salary );
+                (sexEmployee == Sex.MALE) ? "M" : "F");
     }
 
-    public boolean equals(Object object) {
-        Employee employee = (Employee) object;
+    public boolean equals(Employee employee) {
 
         return (employee != null && this.lastname.equalsIgnoreCase(employee.lastname)
                 && this.firstname.equalsIgnoreCase(employee.firstname)
                 && this.age == employee.age
                 && this.sexEmployee == employee.sexEmployee);
     }
+
+    public double getSalary(){
+        return salary;
+
+    }
+
+    public void setTeam(Team team) {
+        this.team = team;
+    }
+    public Team getTeam() {
+        return team;
+    }
+    public abstract double getTotalSalary();
 
 }

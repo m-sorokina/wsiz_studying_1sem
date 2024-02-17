@@ -1,13 +1,11 @@
 package lab3work;
 
-import lab3work.Employee;
-
 public class Developer extends Employee {
 
     private String[] skills;
 
-    public Developer(String lastname, String firstname, int age, String sexEmployee, double salary, String[] skills) {
-        super(lastname, firstname, age, sexEmployee, salary);
+    public Developer(String lastname, String firstname, int age, String sexEmployee, double salary, String[] skills, Position position) {
+        super(lastname, firstname, age, sexEmployee, salary, position);
         this.skills = skills;
 
     }
@@ -28,7 +26,33 @@ public class Developer extends Employee {
     }
 
     @Override
-    public boolean equals(Object object) {
-        return super.equals(object);
+    public boolean equals(Employee employee) {
+        return super.equals(employee);
+    }
+
+    @Override
+    public double getSalary() {
+        return super.getSalary();
+    }
+
+    @Override
+    public void setTeam(Team team) {
+        super.setTeam(team);
+    }
+
+    @Override
+    public Position getPosition() {
+        return super.getPosition();
+    }
+
+    @Override
+    public Team getTeam() {
+        return super.getTeam();
+    }
+
+    @Override
+    public double getTotalSalary() {
+        double bonus = (0.02 * getSalary()) * skills.length;
+        return getSalary() + bonus;
     }
 }
