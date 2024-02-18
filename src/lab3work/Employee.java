@@ -7,7 +7,7 @@ public abstract class Employee {
     private final Sex sexEmployee;
     private double salary;
     private Position position;
-    private Team team;
+    private int teamID;
 
 
      public Employee(String lastname, String firstname, int age,
@@ -18,7 +18,7 @@ public abstract class Employee {
         this.sexEmployee = (sexEmployee.toUpperCase().startsWith("M")) ? Sex.MALE : Sex.FEMALE;
         this.salary = salary;
         this.position = position;
-        team = null;
+        teamID = 0;
     }
 
     public Position getPosition(){
@@ -48,11 +48,11 @@ public abstract class Employee {
 
     }
 
-    public void setTeam(Team team) {
-        this.team = team;
+    public void setTeam(int ID) {
+        teamID = ID;
     }
-    public Team getTeam() {
-        return team;
+    public int getTeam() {
+        return teamID;
     }
     public abstract double getTotalSalary();
 

@@ -1,7 +1,5 @@
 package lab3work;
 
-import com.sun.jdi.connect.ListeningConnector;
-
 import java.util.ArrayList;
 
 public class Company {
@@ -29,7 +27,7 @@ public class Company {
         if (employee != null)
             if (!ifEmployeeExists(employee)) {
                 this.employees.add(employee);
-                logger.info("the Employee is added: " + employee);
+                logger.info("the employee is added: " + employee);
                 return true;
             } else {
                 logger.error("an attempt to add an existing employee: " + employee);
@@ -74,8 +72,13 @@ public class Company {
         return false;
     }
 
-    public void addCompanyEmployeeToTeam(String teamName, int[] teamMembersIndexes) {
-        Team team = checkIfTeamExist(teamName);
+    public void addEmployeeToTeam(String teamName, int[] teamMembersIndexes) {
+        Employee[] teamMembers = createEmployeeList(teamMembersIndexes);
+        Team team = findOrCreateTeam(teamName);
+        team.addTeamMember(teamMembers);
+    }
+
+    private Employee[] createEmployeeList(int[] teamMembersIndexes) {
         Employee[] teamMembers = new Employee[teamMembersIndexes.length];
         for (int i = 0; i < employees.size(); i++) {
             for (int j = 0; j < teamMembersIndexes.length; j++)
@@ -83,20 +86,16 @@ public class Company {
                     teamMembers[j] = employees.get(teamMembersIndexes[j]);
                 }
         }
+        return teamMembers;
+    }
+
+    public Team findOrCreateTeam(String teamName) {
+        Team team = checkIfTeamExist(teamName);
         if (team == null) {
-            team = new Team(teamName, teamMembers);
+            team = new Team(teamName);
             teams.add(team);
-        } else {
-            team.addTeamMember(teamMembers);
         }
-        for (Employee employee : teamMembers) {
-            employee.setTeam(team);
-        }
-        for (Employee employee : employees) {
-            if (employee.getPosition() == Position.MANAGER && employee.getTeam() == team) {
-                ((Manager) employee).setTeamSize(team.getTeamMembersQty());
-            }
-        }
+        return team;
     }
 
     public Team checkIfTeamExist(String teamName) {
@@ -142,16 +141,25 @@ public class Company {
         for (Employee employee : employees) {
             String teamSize = "";
             String teamName = "";
-            if (employee.getTeam() != null) {
-                teamName = employee.getTeam().getTeamName();
+            if (employee.getTeam() != 0) {
+                teamName = getTeamName(employee.getTeam());
                 if (employee.getPosition() == Position.MANAGER) {
                     teamSize = String.valueOf(((Manager) employee).getTeamSize());
                 }
             }
-            System.out.printf("%5d\t%2s%-10s%3s%-58s%2s%6s%4s%8.1f%2s%6s%6s%4s%4s%n", ++n,
+            System.out.printf("%5d\t%2s%-10s%3s%-58s%2s%8s%2s%8.1f%2s%6s%6s%4s%4s%n", ++n,
                     "|", employee.getPosition(), "|", employee, "|", teamName, "|", employee.getTotalSalary(), "|", teamSize, "|",
                     (employees.indexOf(employee) + 1), "|");
         }
 
+    }
+
+    public String getTeamName(int ID) {
+        for (Team team : teams) {
+            if (team.getID() == ID) {
+                return team.getTeamName();
+            }
+        }
+        return null;
     }
 }

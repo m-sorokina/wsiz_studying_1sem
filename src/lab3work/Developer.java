@@ -15,11 +15,6 @@ public class Developer extends Employee {
         this.skills = skills.trim().split("\\s+,\\s+|,\\s+|\\s+,|,");
     }
     @Override
-    public void setSalary(double salary) {
-        super.setSalary(salary);
-    }
-
-    @Override
     public String toString() {
         String skillsToPrint = " {" + String.join(", ", this.skills)  + "}";
         return super.toString() + skillsToPrint;
@@ -36,18 +31,18 @@ public class Developer extends Employee {
     }
 
     @Override
-    public void setTeam(Team team) {
-        super.setTeam(team);
-    }
-
-    @Override
     public Position getPosition() {
         return super.getPosition();
     }
 
     @Override
-    public Team getTeam() {
+    public int getTeam() {
         return super.getTeam();
+    }
+
+    @Override
+    public void setTeam(int ID) {
+        super.setTeam(ID);
     }
 
     @Override

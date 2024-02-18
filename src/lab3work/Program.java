@@ -62,10 +62,13 @@ public class Program {
     }
 
     public static void addCompanyEmployeeByDefault(Company company) {
-        Employee[] employees = new Employee[3];
-        employees[0] = new Developer("Mortimer", "Adam", 28, "m", 4600, new String[]{"SQL", "JavaScript", "C#"}, Position.DEVELOPER);
-        employees[1] = new Developer("Daniels", "Jack", 35, "m", 5800, new String[]{"HTML", "C++"}, Position.DEVELOPER);
-        employees[2] = new Manager("Weider", "Dart", 40, "m", 9500, Position.MANAGER);
+        Employee[] employees = new Employee[6];
+        employees[0] = new Manager("Weider", "Dart", 40, "m", 9500, Position.MANAGER);
+        employees[1] = new Developer("Mortimer", "Adam", 28, "m", 4600, new String[]{"SQL", "JavaScript", "C#"}, Position.DEVELOPER);
+        employees[2] = new Developer("Daniels", "Jack", 35, "m", 5800, new String[]{"HTML", "C++"}, Position.DEVELOPER);
+        employees[3] = new Developer("Among", "Us", 35, "m", 4800, new String[]{""}, Position.DEVELOPER);
+        employees[4] = new Developer("Duke", "Grand", 38, "m", 6800, new String[]{"absolutely all!", "guru", "the best"}, Position.DEVELOPER);
+        employees[5] = new Developer("Humpty", "Dumpty", 45, "m", 6300, new String[]{"XLST", "XML"}, Position.DEVELOPER);
         for (Employee employee : employees) {
             company.addEmployee(employee);
         }
@@ -98,7 +101,7 @@ public class Program {
                 }
                 employee = addCompanyEmployee(employeePosition);
             }
-            System.out.println("Do you want to select another position to enter employees? (y/n): ");
+            System.out.print("Do you want to select another position to enter employees? (y/n): ");
             do {
                 enterEmployees = in.nextLine();
             } while (!(enterEmployees.equalsIgnoreCase("y") || enterEmployees.equalsIgnoreCase("n")));
@@ -117,7 +120,7 @@ public class Program {
             switch (operationNumber) {
                 case 1 -> {
                     position = Position.MANAGER;
-                    System.out.println("Enter a manager in format " + formatManager + ";");
+                    System.out.println("Enter a manager in format " + formatManager + ":");
                 }
                 case 2 -> {
                     position = Position.DEVELOPER;
@@ -144,7 +147,6 @@ public class Program {
                     String[] skills = str.substring(str.indexOf("{") + 1, str.length() - 1).trim().split("\\s+,\\s+|,\\s+|\\s+,|,");
                     return new Developer(lastname, firstname, age, sexEmployee, salary, skills, position);
                 } else if (position == Position.MANAGER) {
-//                    int teamSize = Integer.parseInt(employeeToSplit[5].trim());
                     return new Manager(lastname, firstname, age, sexEmployee, salary, position);
                 }
             } catch (Exception ignore) {
@@ -169,7 +171,7 @@ public class Program {
     public static void changeEmployeeSalary(Company company) {
         System.out.print("\nTo change the salary enter employee's index and new salary in format \"index, salary\": ");
         try {
-            String[] temp = in.nextLine().trim().split(",\\s+");
+            String[] temp = in.nextLine().trim().split(",\\s+|,");
             int index = Integer.parseInt(temp[0].trim()) - 1;
             double salary = Double.parseDouble(temp[1].trim());
             if (!company.changeEmployeeSalary(index, salary)) {
@@ -183,7 +185,7 @@ public class Program {
     public static void addDeveloperSkills(Company company) {
         System.out.print("\nTo add new skill to developer enter employee's index and new skill in format \"index, skill\": ");
         try {
-            String[] temp = in.nextLine().trim().split(",\\s+");
+            String[] temp = in.nextLine().trim().split(",\\s+|,");
             int index = Integer.parseInt(temp[0].trim()) - 1;
             String newSkill = temp[1].trim();
             if (!company.addEmployeeSkills(index, newSkill)) {
@@ -197,13 +199,15 @@ public class Program {
     public static void groupEmployeeByTeam(Company company) {
         System.out.print("\nEnter team name and team members employee indexes in format \"team name, index1, index2\": ");
         try {
-            String[] temp = Program.in.nextLine().trim().split(",\\s+");
+            String[] temp = Program.in.nextLine().trim().split(",\\s+|,");
             String teamName = temp[0].trim();
             int[] teamMembersIndexes = new int[temp.length - 1];
-            for (int i = 0; i < temp.length - 1; i++) {
-                teamMembersIndexes[i] = Integer.parseInt(temp[i + 1].trim()) - 1;
-            }
-            company.addCompanyEmployeeToTeam(teamName, teamMembersIndexes);
+            if (teamMembersIndexes.length > 0) {
+                for (int i = 0; i < temp.length - 1; i++) {
+                    teamMembersIndexes[i] = Integer.parseInt(temp[i + 1].trim()) - 1;
+                }
+                company.addEmployeeToTeam(teamName, teamMembersIndexes);
+            } else throw new Exception();
         } catch (Exception ignore) {
             System.out.println("Some entered data are incorrect\nThe employees were not grouped by team");
         }

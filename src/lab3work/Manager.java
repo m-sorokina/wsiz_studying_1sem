@@ -46,12 +46,12 @@ public class Manager extends Employee {
     }
 
     @Override
-    public void setTeam(Team team) {
-        super.setTeam(team);
+    public void setTeam(int ID) {
+        super.setTeam(ID);
     }
 
     @Override
-    public Team getTeam() {
+    public int getTeam() {
         return super.getTeam();
     }
 
